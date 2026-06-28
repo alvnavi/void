@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isEditing = false;
   String _currentTranscript = '';
   double _soundLevel = 0.0;
+  String? _originalTextBeforeRecording;
   
   // v11.0 Undo History
   final List<List<Note>> _notesHistory = [];
@@ -144,10 +145,16 @@ class _HomeScreenState extends State<HomeScreen> {
       _isRecording = true;
       _currentTranscript = '';
       _soundLevel = 0.0;
+      _originalTextBeforeRecording = _textController.text;
     });
 
     _speech.listen(
-      onResult: (val) => setState(() => _currentTranscript = val.recognizedWords),
+      onResult: (val) {
+        setState(() {
+          _currentTranscript = val.recognizedWords;
+          _textController.text = val.recognizedWords;
+        });
+      },
       onSoundLevelChange: (level) => setState(() => _soundLevel = level),
       localeId: _settings.targetLanguage == 'English' ? 'en_US' : 'es_ES',
     );
@@ -194,7 +201,14 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
       }
     } else {
-      setState(() => _isProcessing = false);
+      // Restore original text if no API key or empty transcript
+      setState(() {
+        _isProcessing = false;
+        if (_originalTextBeforeRecording != null) {
+          _textController.text = _originalTextBeforeRecording!;
+          _originalTextBeforeRecording = null;
+        }
+      });
     }
   }
 
@@ -629,11 +643,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 150),
             child: EditorView(
-              controller: _textController,
-              isEditing: _isEditing,
-              transientText: (_isRecording || _isProcessing) ? _currentTranscript : '',
-              onNoteLinkTapped: _onNoteTitleRequested,
-            ),
+                controller: _textController,
+                isEditing: _isEditing,
+                transientText: (!_isEditing && (_isRecording || _isProcessing)) ? _currentTranscript : '',
+                onNoteLinkTapped: _onNoteTitleRequested,
+              ),
           ),
           
           Align(
