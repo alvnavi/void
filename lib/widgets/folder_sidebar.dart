@@ -45,7 +45,7 @@ class FolderSidebar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Image.asset(
-                          'assets/logo.png',
+                          'assets/icon.png',
                           height: 24,
                           width: 24,
                         ),
