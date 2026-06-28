@@ -1,0 +1,43 @@
+name: Compilador Automatico de Flutter
+
+# El proceso se activará cada vez que subas cambios (push) a la rama "main"
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descarga el código de tu repositorio en el servidor de GitHub
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+      
+      # 2. Configura Java (necesario para compilar aplicaciones Android)
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          
+      # 3. Instala y configura Flutter en el servidor de forma automatica
+      - name: Configurar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      # 4. Descarga los paquetes y dependencias de tu pubspec.yaml
+      - name: Instalar dependencias de Flutter
+        run: flutter pub get
+        
+      # 5. Compila el APK en modo Release (optimizado para producción)
+      - name: Compilar APK de Android
+        run: flutter build apk --release
+
+      # 6. Toma el archivo APK resultante y lo sube a GitHub para que lo descargues
+      - name: Subir APK generado
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mi-Aplicacion-APK # Puedes cambiar el nombre aquí
+          path: build/app/outputs/flutter-apk/app-release.apk
