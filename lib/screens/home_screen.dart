@@ -598,6 +598,10 @@ class _HomeScreenState extends State<HomeScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/icon.png'),
+        ),
         title: Text(
           (_activeNote?.title ?? 'VOID').toUpperCase(),
           style: const TextStyle(fontSize: 12, letterSpacing: 2, fontWeight: FontWeight.bold),

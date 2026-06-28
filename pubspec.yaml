@@ -2,7 +2,7 @@ name: void_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1-beta+1
 
 environment:
   sdk: ^3.9.2
@@ -36,12 +36,12 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/icon.png"
   min_sdk_android: 21
 
 flutter_native_splash:
   color: "#000000"
-  image: assets/logo.png
+  image: assets/icon.png
   android: true
   ios: true
   fullscreen: true
